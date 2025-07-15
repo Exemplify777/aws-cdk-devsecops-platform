@@ -12,9 +12,9 @@ from .model_deployment_construct import ModelDeploymentConstruct, ModelDeploymen
 __all__ = [
     # Constructs
     "BedrockConstruct",
-    "SageMakerConstruct", 
+    "SageMakerConstruct",
     "ModelDeploymentConstruct",
-    
+
     # Props
     "BedrockConstructProps",
     "SageMakerConstructProps",

@@ -1,0 +1,66 @@
+{
+  "summary": {
+    "total_tests": 11,
+    "passed": 2,
+    "failed": 6,
+    "skipped": 3,
+    "success_rate": 18.18
+  },
+  "results": [
+    {
+      "test": "CDK App Import",
+      "status": "FAIL",
+      "message": "CDK app import failed: Traceback (most recent call last):\n  File \"/Users/ft/Dev/Projects/DAIO/CICD/mcp-cdk-ddk/app.py\", line 10, in <module>\n    import aws_cdk as cdk\nModuleNotFoundError: No module named 'aws_cdk'\n"
+    },
+    {
+      "test": "CDK Synthesis",
+      "status": "SKIP",
+      "message": "CDK CLI not available or synthesis failed"
+    },
+    {
+      "test": "CLI Help",
+      "status": "FAIL",
+      "message": "CLI help failed: Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/Users/ft/Dev/Projects/DAIO/CICD/mcp-cdk-ddk/platform/cli/main.py\", line 14, in <module>\n    import typer\nModuleNotFoundError: No module named 'typer'\n"
+    },
+    {
+      "test": "CLI Templates",
+      "status": "FAIL",
+      "message": "CLI templates failed: Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/Users/ft/Dev/Projects/DAIO/CICD/mcp-cdk-ddk/platform/cli/main.py\", line 14, in <module>\n    import typer\nModuleNotFoundError: No module named 'typer'\n"
+    },
+    {
+      "test": "Security Scanner Help",
+      "status": "FAIL",
+      "message": "Security scanner help failed: Traceback (most recent call last):\n  File \"/Users/ft/Dev/Projects/DAIO/CICD/mcp-cdk-ddk/security/scanner.py\", line 15, in <module>\n    import typer\nModuleNotFoundError: No module named 'typer'\n"
+    },
+    {
+      "test": "Security Scanner Structure",
+      "status": "SKIP",
+      "message": "Security scanner structure is functional"
+    },
+    {
+      "test": "Compliance Checker Help",
+      "status": "FAIL",
+      "message": "Compliance checker help failed: Traceback (most recent call last):\n  File \"/Users/ft/Dev/Projects/DAIO/CICD/mcp-cdk-ddk/security/compliance.py\", line 14, in <module>\n    import typer\nModuleNotFoundError: No module named 'typer'\n"
+    },
+    {
+      "test": "Compliance Check",
+      "status": "FAIL",
+      "message": "Compliance check failed: Traceback (most recent call last):\n  File \"/Users/ft/Dev/Projects/DAIO/CICD/mcp-cdk-ddk/security/compliance.py\", line 14, in <module>\n    import typer\nModuleNotFoundError: No module named 'typer'\n"
+    },
+    {
+      "test": "Template Structure",
+      "status": "PASS",
+      "message": "Data pipeline template exists"
+    },
+    {
+      "test": "Template Configuration",
+      "status": "PASS",
+      "message": "Template configuration is valid"
+    },
+    {
+      "test": "Documentation Build",
+      "status": "SKIP",
+      "message": "MkDocs not available or build failed"
+    }
+  ]
+}

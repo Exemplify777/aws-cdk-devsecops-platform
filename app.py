@@ -22,47 +22,27 @@ from infrastructure.stacks.ai_tools_stack import AIToolsStack
 def get_environment_config(env_name: str) -> Dict[str, Any]:
     """Get environment-specific configuration."""
     settings = get_settings()
-    
-    environments = {
-        "dev": {
-            "account": settings.dev_account_id,
-            "region": settings.aws_region,
-            "environment_name": "dev",
-            "enable_deletion_protection": False,
-            "enable_backup": False,
-            "instance_types": {
-                "small": "t3.micro",
-                "medium": "t3.small",
-                "large": "t3.medium"
-            }
-        },
-        "staging": {
-            "account": settings.staging_account_id,
-            "region": settings.aws_region,
-            "environment_name": "staging",
-            "enable_deletion_protection": True,
-            "enable_backup": True,
-            "instance_types": {
-                "small": "t3.small",
-                "medium": "t3.medium",
-                "large": "t3.large"
-            }
-        },
-        "prod": {
-            "account": settings.prod_account_id,
-            "region": settings.aws_region,
-            "environment_name": "prod",
-            "enable_deletion_protection": True,
-            "enable_backup": True,
-            "instance_types": {
-                "small": "t3.medium",
-                "medium": "t3.large",
-                "large": "t3.xlarge"
-            }
-        }
-    }
-    
-    return environments.get(env_name, environments["dev"])
+
+    # Set the environment in settings
+    settings.environment = env_name
+
+    # Get environment config from settings
+    env_config = settings.get_environment_config()
+
+    # Add account and environment name
+    account_id = None
+    if env_name == "dev":
+        account_id = settings.dev_account_id
+    elif env_name == "staging":
+        account_id = settings.staging_account_id
+    elif env_name == "prod":
+        account_id = settings.prod_account_id
+
+    env_config["account"] = account_id
+    env_config["region"] = settings.aws_region
+    env_config["environment_name"] = env_name
+
+    return env_config
 
 
 def main():

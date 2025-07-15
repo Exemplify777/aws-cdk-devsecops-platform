@@ -1,6 +1,56 @@
-# DevSecOps Platform for Data & AI Organization
+# DevSecOps Platform Documentation
 
-Welcome to the comprehensive DevSecOps platform designed specifically for data engineering and AI/ML workloads. This platform provides a complete solution for building, deploying, and managing data pipelines with security, compliance, and operational excellence built-in from day one.
+Welcome to the comprehensive documentation for the DevSecOps Platform for Data & AI Organization. This platform provides enterprise-grade infrastructure, security, compliance, and operational excellence for data engineering and AI/ML workloads.
+
+## 🚀 Quick Start
+
+Get up and running in under 30 minutes:
+
+1. **[Installation Guide](getting-started/installation.md)** - Set up your development environment
+2. **[Quick Start Tutorial](getting-started/quickstart.md)** - Create and deploy your first project
+3. **[Architecture Overview](architecture/overview.md)** - Understand the platform architecture
+
+## 📚 Documentation Sections
+
+### Getting Started
+- **[Installation Guide](getting-started/installation.md)** - Complete installation and setup instructions
+- **[Quick Start Tutorial](getting-started/quickstart.md)** - Step-by-step tutorial for your first project
+- **[Configuration](getting-started/configuration.md)** - Environment and CLI configuration
+
+### Architecture
+- **[Overview](architecture/overview.md)** - High-level architecture and design principles
+- **[Infrastructure](architecture/infrastructure.md)** - Detailed infrastructure components
+- **[Security Architecture](architecture/security.md)** - Security design and controls
+- **[Data Architecture](architecture/data.md)** - Data flow and processing architecture
+
+### User Guide
+- **[CLI Reference](user-guide/cli.md)** - Complete CLI command reference
+- **[Project Templates](user-guide/templates.md)** - Available project templates and customization
+- **[Web Portal](user-guide/portal.md)** - Self-service web portal usage
+- **[Best Practices](user-guide/best-practices.md)** - Development and deployment best practices
+
+### Security
+- **[Security Overview](security/overview.md)** - Comprehensive security framework
+- **[Security Scanning](security/scanning.md)** - Automated security scanning and validation
+- **[Compliance](security/compliance.md)** - SOC 2, ISO 27001, and GDPR compliance
+- **[Implementation Guide](security/implementation.md)** - Security implementation details
+
+### Operations
+- **[Deployment Guide](operations/deployment.md)** - Multi-environment deployment strategies
+- **[Monitoring](operations/monitoring.md)** - Comprehensive monitoring and observability
+- **[CI/CD](operations/cicd.md)** - Continuous integration and deployment
+- **[Troubleshooting](operations/troubleshooting.md)** - Common issues and solutions
+
+### Developer Guide
+- **[Development Setup](developer-guide/setup.md)** - Local development environment setup
+- **[Extending the Platform](developer-guide/extending.md)** - Creating custom components
+- **[Contributing](developer-guide/contributing.md)** - How to contribute to the platform
+- **[Testing](developer-guide/testing.md)** - Testing strategies and guidelines
+
+### API Reference
+- **[CLI API](api/cli.md)** - CLI command reference and examples
+- **[Python API](api/python.md)** - Python SDK and library reference
+- **[REST API](api/rest.md)** - Web portal and service APIs
 
 ## 🚀 Key Features
 

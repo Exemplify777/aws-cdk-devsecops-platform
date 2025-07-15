@@ -1,0 +1,141 @@
+site_name: DevSecOps Platform for Data & AI Organization
+site_description: Comprehensive DevSecOps platform for data engineering and AI/ML workloads
+site_author: Data & AI Platform Team
+site_url: https://your-org.github.io/mcp-cdk-ddk
+
+repo_name: your-org/mcp-cdk-ddk
+repo_url: https://github.com/your-org/mcp-cdk-ddk
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.share
+    - content.code.annotate
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+  - mermaid2:
+      arguments:
+        theme: base
+        themeVariables:
+          primaryColor: '#1976d2'
+          primaryTextColor: '#ffffff'
+          primaryBorderColor: '#0d47a1'
+          lineColor: '#424242'
+          sectionBkColor: '#e3f2fd'
+          altSectionBkColor: '#bbdefb'
+          gridColor: '#9e9e9e'
+          secondaryColor: '#ff9800'
+          tertiaryColor: '#4caf50'
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Quick Start: getting-started/quick-start.md
+    - Installation: getting-started/installation.md
+    - Configuration: getting-started/configuration.md
+    - First Project: getting-started/first-project.md
+  - Architecture:
+    - Overview: architecture/overview.md
+    - Infrastructure: architecture/infrastructure.md
+    - Security: architecture/security.md
+    - Data Pipeline: architecture/data-pipeline.md
+    - Monitoring: architecture/monitoring.md
+    - AI Tools: architecture/ai-tools.md
+  - User Guide:
+    - CLI Usage: user-guide/cli.md
+    - Project Templates: user-guide/templates.md
+    - Deployment: user-guide/deployment.md
+    - Monitoring: user-guide/monitoring.md
+    - Security: user-guide/security.md
+  - Developer Guide:
+    - Development Setup: developer-guide/setup.md
+    - Contributing: developer-guide/contributing.md
+    - Testing: developer-guide/testing.md
+    - Custom Constructs: developer-guide/constructs.md
+    - Extending Templates: developer-guide/templates.md
+  - Operations:
+    - Deployment Guide: operations/deployment.md
+    - Monitoring & Alerting: operations/monitoring.md
+    - Backup & Recovery: operations/backup.md
+    - Troubleshooting: operations/troubleshooting.md
+    - Performance Tuning: operations/performance.md
+  - Security:
+    - Security Overview: security/overview.md
+    - Compliance: security/compliance.md
+    - Vulnerability Management: security/vulnerability-management.md
+    - Incident Response: security/incident-response.md
+    - Security Scanning: security/scanning.md
+  - API Reference:
+    - CLI Commands: api/cli.md
+    - Infrastructure Stacks: api/stacks.md
+    - Constructs: api/constructs.md
+    - Configuration: api/configuration.md
+  - Compliance:
+    - SOC 2: compliance/soc2.md
+    - ISO 27001: compliance/iso27001.md
+    - GDPR: compliance/gdpr.md
+    - Audit Reports: compliance/audit-reports.md
+  - Tutorials:
+    - Building a Data Pipeline: tutorials/data-pipeline.md
+    - ML Workflow Setup: tutorials/ml-workflow.md
+    - Streaming Analytics: tutorials/streaming.md
+    - Custom AI Tools: tutorials/ai-tools.md
+  - FAQ: faq.md
+  - Changelog: changelog.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/your-org/mcp-cdk-ddk
+    - icon: fontawesome/brands/slack
+      link: https://your-org.slack.com/channels/devsecops-platform
+  version:
+    provider: mike
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js

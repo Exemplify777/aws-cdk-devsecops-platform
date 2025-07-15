@@ -1,0 +1,124 @@
+rules:
+  - id: "SOC2-CC6.1"
+    name: "Logical and Physical Access Controls"
+    description: "The entity implements logical and physical access controls to protect against threats from sources outside its system boundaries"
+    framework: "SOC2"
+    category: "Common Criteria"
+    severity: "high"
+    check_type: "security_policy"
+    parameters: {}
+    remediation: "Implement comprehensive access controls including authentication, authorization, and network security"
+
+  - id: "SOC2-CC6.2"
+    name: "Transmission and Disposal of Information"
+    description: "Prior to issuing system credentials and granting system access, the entity registers and authorizes new internal and external users"
+    framework: "SOC2"
+    category: "Common Criteria"
+    severity: "high"
+    check_type: "file_exists"
+    parameters:
+      files:
+        - "SECURITY.md"
+        - ".gitignore"
+    remediation: "Create security documentation and ensure sensitive data is properly protected"
+
+  - id: "SOC2-CC6.3"
+    name: "System Access Removal"
+    description: "The entity authorizes, modifies, or removes access to data, software, functions, and other protected information assets"
+    framework: "SOC2"
+    category: "Common Criteria"
+    severity: "medium"
+    check_type: "configuration"
+    parameters:
+      file: ".github/workflows/ci.yml"
+      settings:
+        "on.pull_request": true
+    remediation: "Implement proper access control workflows and approval processes"
+
+  - id: "SOC2-CC7.1"
+    name: "System Monitoring"
+    description: "To meet its objectives, the entity uses detection and monitoring procedures to identify security events"
+    framework: "SOC2"
+    category: "Common Criteria"
+    severity: "high"
+    check_type: "file_exists"
+    parameters:
+      files:
+        - ".github/workflows/security.yml"
+        - "monitoring/"
+    remediation: "Implement comprehensive monitoring and alerting systems"
+
+  - id: "SOC2-CC7.2"
+    name: "System Monitoring Analysis"
+    description: "The entity monitors system components and the operation of controls to detect anomalies"
+    framework: "SOC2"
+    category: "Common Criteria"
+    severity: "medium"
+    check_type: "directory_structure"
+    parameters:
+      directories:
+        - "monitoring"
+        - "tests"
+    remediation: "Set up monitoring infrastructure and testing frameworks"
+
+  - id: "SOC2-CC8.1"
+    name: "Change Management"
+    description: "The entity authorizes, designs, develops or acquires, configures, documents, tests, approves, and implements changes to infrastructure, data, software, and procedures"
+    framework: "SOC2"
+    category: "Common Criteria"
+    severity: "high"
+    check_type: "file_content"
+    parameters:
+      file: ".github/workflows/cd.yml"
+      patterns:
+        - "environment:"
+        - "approval"
+    remediation: "Implement proper change management with approvals and testing"
+
+  - id: "SOC2-A1.1"
+    name: "Availability Monitoring"
+    description: "The entity maintains, monitors, and evaluates current processing capacity and use of system components"
+    framework: "SOC2"
+    category: "Availability"
+    severity: "medium"
+    check_type: "file_exists"
+    parameters:
+      files:
+        - "infrastructure/stacks/monitoring_stack.py"
+    remediation: "Implement availability monitoring and capacity planning"
+
+  - id: "SOC2-A1.2"
+    name: "System Recovery"
+    description: "The entity authorizes, designs, develops or acquires, implements, operates, approves, maintains, and monitors environmental protections, software, data back-up processes, and recovery infrastructure"
+    framework: "SOC2"
+    category: "Availability"
+    severity: "high"
+    check_type: "configuration"
+    parameters:
+      file: "infrastructure/config/settings.py"
+      settings:
+        "enable_backup": true
+    remediation: "Implement backup and disaster recovery procedures"
+
+  - id: "SOC2-P1.1"
+    name: "Privacy Notice"
+    description: "The entity provides notice to data subjects about its privacy practices"
+    framework: "SOC2"
+    category: "Privacy"
+    severity: "medium"
+    check_type: "file_exists"
+    parameters:
+      files:
+        - "PRIVACY.md"
+        - "docs/privacy-policy.md"
+    remediation: "Create privacy policy documentation"
+
+  - id: "SOC2-P2.1"
+    name: "Data Collection"
+    description: "The entity communicates choices available regarding the collection, use, retention, disclosure, and disposal of personal information"
+    framework: "SOC2"
+    category: "Privacy"
+    severity: "medium"
+    check_type: "data_governance"
+    parameters: {}
+    remediation: "Implement data governance and classification policies"

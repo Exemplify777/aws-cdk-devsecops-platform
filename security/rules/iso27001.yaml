@@ -1,0 +1,188 @@
+rules:
+  - id: "ISO27001-A.5.1.1"
+    name: "Information Security Policies"
+    description: "A set of policies for information security shall be defined, approved by management, published and communicated to employees and relevant external parties"
+    framework: "ISO27001"
+    category: "Information Security Policies"
+    severity: "high"
+    check_type: "file_exists"
+    parameters:
+      files:
+        - "SECURITY.md"
+        - "docs/security-policy.md"
+    remediation: "Create and maintain information security policies"
+
+  - id: "ISO27001-A.6.1.1"
+    name: "Information Security Roles and Responsibilities"
+    description: "All information security responsibilities shall be defined and allocated"
+    framework: "ISO27001"
+    category: "Organization of Information Security"
+    severity: "medium"
+    check_type: "file_content"
+    parameters:
+      file: "SECURITY.md"
+      patterns:
+        - "responsibility"
+        - "contact"
+    remediation: "Define security roles and responsibilities in documentation"
+
+  - id: "ISO27001-A.8.1.1"
+    name: "Inventory of Assets"
+    description: "Assets associated with information and information processing facilities shall be identified and an inventory of these assets shall be drawn up and maintained"
+    framework: "ISO27001"
+    category: "Asset Management"
+    severity: "medium"
+    check_type: "file_exists"
+    parameters:
+      files:
+        - "docs/asset-inventory.md"
+        - "ASSETS.md"
+    remediation: "Create and maintain an asset inventory"
+
+  - id: "ISO27001-A.9.1.1"
+    name: "Access Control Policy"
+    description: "An access control policy shall be established, documented and reviewed based on business and information security requirements"
+    framework: "ISO27001"
+    category: "Access Control"
+    severity: "high"
+    check_type: "security_policy"
+    parameters: {}
+    remediation: "Implement comprehensive access control policies"
+
+  - id: "ISO27001-A.9.2.1"
+    name: "User Registration and De-registration"
+    description: "A formal user registration and de-registration process shall be implemented to enable assignment of access rights"
+    framework: "ISO27001"
+    category: "Access Control"
+    severity: "high"
+    check_type: "file_content"
+    parameters:
+      file: ".github/workflows/ci.yml"
+      patterns:
+        - "permissions"
+        - "secrets"
+    remediation: "Implement user access management in CI/CD workflows"
+
+  - id: "ISO27001-A.10.1.1"
+    name: "Cryptographic Policy"
+    description: "A policy on the use of cryptographic controls for protection of information shall be developed and implemented"
+    framework: "ISO27001"
+    category: "Cryptography"
+    severity: "high"
+    check_type: "file_content"
+    parameters:
+      file: "infrastructure/stacks/core_infrastructure_stack.py"
+      patterns:
+        - "encryption"
+        - "kms"
+    remediation: "Implement encryption policies and key management"
+
+  - id: "ISO27001-A.12.1.1"
+    name: "Operating Procedures and Responsibilities"
+    description: "Operating procedures shall be documented and made available to all users who need them"
+    framework: "ISO27001"
+    category: "Operations Security"
+    severity: "medium"
+    check_type: "file_exists"
+    parameters:
+      files:
+        - "docs/operations.md"
+        - "OPERATIONS.md"
+        - "README.md"
+    remediation: "Document operational procedures and responsibilities"
+
+  - id: "ISO27001-A.12.2.1"
+    name: "Controls Against Malware"
+    description: "Detection, prevention and recovery controls to protect against malware shall be implemented"
+    framework: "ISO27001"
+    category: "Operations Security"
+    severity: "high"
+    check_type: "file_exists"
+    parameters:
+      files:
+        - ".github/workflows/security.yml"
+    remediation: "Implement malware protection and security scanning"
+
+  - id: "ISO27001-A.12.6.1"
+    name: "Management of Technical Vulnerabilities"
+    description: "Information about technical vulnerabilities of information systems being used shall be obtained in a timely fashion"
+    framework: "ISO27001"
+    category: "Operations Security"
+    severity: "high"
+    check_type: "file_content"
+    parameters:
+      file: ".github/workflows/security.yml"
+      patterns:
+        - "vulnerability"
+        - "dependency"
+        - "audit"
+    remediation: "Implement vulnerability management and dependency scanning"
+
+  - id: "ISO27001-A.14.1.1"
+    name: "Information Security Requirements Analysis and Specification"
+    description: "The information security requirements shall be included in the requirements for new information systems or enhancements to existing information systems"
+    framework: "ISO27001"
+    category: "System Acquisition, Development and Maintenance"
+    severity: "medium"
+    check_type: "file_exists"
+    parameters:
+      files:
+        - "docs/security-requirements.md"
+        - "SECURITY_REQUIREMENTS.md"
+    remediation: "Document security requirements for system development"
+
+  - id: "ISO27001-A.14.2.1"
+    name: "Secure Development Policy"
+    description: "Rules for the development of software and systems shall be established and applied to developments within the organization"
+    framework: "ISO27001"
+    category: "System Acquisition, Development and Maintenance"
+    severity: "high"
+    check_type: "file_content"
+    parameters:
+      file: ".pre-commit-config.yaml"
+      patterns:
+        - "bandit"
+        - "safety"
+        - "security"
+    remediation: "Implement secure development practices and pre-commit hooks"
+
+  - id: "ISO27001-A.16.1.1"
+    name: "Responsibilities and Procedures"
+    description: "Management responsibilities and procedures shall be established to ensure a quick, effective and orderly response to information security incidents"
+    framework: "ISO27001"
+    category: "Information Security Incident Management"
+    severity: "high"
+    check_type: "file_exists"
+    parameters:
+      files:
+        - "docs/incident-response.md"
+        - "INCIDENT_RESPONSE.md"
+    remediation: "Create incident response procedures and documentation"
+
+  - id: "ISO27001-A.17.1.1"
+    name: "Planning Information Security Continuity"
+    description: "The organization shall determine its requirements for information security and the continuity of information security management in adverse situations"
+    framework: "ISO27001"
+    category: "Information Security Aspects of Business Continuity Management"
+    severity: "medium"
+    check_type: "configuration"
+    parameters:
+      file: "infrastructure/config/settings.py"
+      settings:
+        "enable_backup": true
+        "enable_deletion_protection": true
+    remediation: "Implement business continuity and backup procedures"
+
+  - id: "ISO27001-A.18.1.1"
+    name: "Identification of Applicable Legislation and Contractual Requirements"
+    description: "All relevant legislative statutory, regulatory, contractual requirements and the organization's approach to meet these requirements shall be explicitly identified, documented and kept up to date"
+    framework: "ISO27001"
+    category: "Compliance"
+    severity: "medium"
+    check_type: "file_exists"
+    parameters:
+      files:
+        - "docs/compliance.md"
+        - "COMPLIANCE.md"
+        - "LICENSE"
+    remediation: "Document compliance requirements and legal obligations"

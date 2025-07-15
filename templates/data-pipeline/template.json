@@ -1,0 +1,32 @@
+{
+    "name": "data-pipeline",
+    "description": "Scalable data pipeline template with ETL/ELT processing capabilities",
+    "type": "data-pipeline",
+    "version": "1.0.0",
+    "author": "DevSecOps Platform Team",
+    "tags": ["data-pipeline", "etl", "aws", "cdk", "python", "lambda", "glue"],
+    "requirements": {
+        "python": ">=3.9",
+        "aws_cdk": ">=2.100.0",
+        "boto3": ">=1.28.0"
+    },
+    "features": [
+        "AWS Lambda for data processing",
+        "AWS Glue for data cataloging",
+        "S3 for data storage",
+        "Step Functions for orchestration",
+        "CloudWatch for monitoring",
+        "EventBridge for scheduling",
+        "IAM roles with least privilege",
+        "Encryption at rest and in transit",
+        "Automated testing",
+        "CI/CD pipeline"
+    ],
+    "architecture": {
+        "compute": ["AWS Lambda", "AWS Glue", "ECS Fargate"],
+        "storage": ["Amazon S3", "Amazon RDS"],
+        "orchestration": ["AWS Step Functions", "Amazon EventBridge"],
+        "monitoring": ["Amazon CloudWatch", "AWS X-Ray"],
+        "security": ["AWS IAM", "AWS KMS", "VPC"]
+    }
+}

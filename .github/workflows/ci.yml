@@ -1,0 +1,312 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18'
+
+jobs:
+  code-quality:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Cache Python dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+        
+    - name: Code formatting check (Black)
+      run: |
+        black --check --diff .
+        
+    - name: Import sorting check (isort)
+      run: |
+        isort --check-only --diff .
+        
+    - name: Linting (Pylint)
+      run: |
+        pylint infrastructure/ platform/ --fail-under=8.0
+        
+    - name: Type checking (MyPy)
+      run: |
+        mypy infrastructure/ platform/
+        
+    - name: Code complexity (Flake8)
+      run: |
+        flake8 infrastructure/ platform/ --max-complexity=10
+
+  security-scanning:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+        
+    - name: Security linting (Bandit)
+      run: |
+        bandit -r infrastructure/ platform/ -f json -o bandit-report.json
+        bandit -r infrastructure/ platform/
+        
+    - name: Dependency vulnerability scan (Safety)
+      run: |
+        safety check --json --output safety-report.json
+        safety check
+        
+    - name: SAST scanning (Semgrep)
+      run: |
+        semgrep --config=auto infrastructure/ platform/ --json --output=semgrep-report.json
+        semgrep --config=auto infrastructure/ platform/
+        
+    - name: Upload security reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+          safety-report.json
+          semgrep-report.json
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+        
+    - name: Run unit tests
+      run: |
+        pytest tests/unit/ -v --cov=infrastructure --cov=platform --cov-report=xml --cov-report=html
+        
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+
+  infrastructure-tests:
+    name: Infrastructure Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        
+    - name: Install CDK
+      run: |
+        npm install -g aws-cdk
+        
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+        
+    - name: CDK Synth
+      run: |
+        cdk synth --all
+        
+    - name: CDK Security Check
+      run: |
+        # Install cdk-nag for security checks
+        npm install -g cdk-nag
+        # Run security validation
+        cdk synth --all --validation
+        
+    - name: Infrastructure unit tests
+      run: |
+        pytest tests/infrastructure/ -v
+        
+    - name: Upload CDK outputs
+      uses: actions/upload-artifact@v3
+      with:
+        name: cdk-outputs
+        path: cdk.out/
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: [code-quality, security-scanning, unit-tests]
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+          
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+        
+    - name: Run integration tests
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+        REDIS_URL: redis://localhost:6379
+      run: |
+        pytest tests/integration/ -v --maxfail=5
+        
+    - name: Run API tests
+      run: |
+        pytest tests/api/ -v
+
+  docker-build:
+    name: Docker Build Test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Build portal image
+      run: |
+        docker build -t portal:test -f platform/portal/Dockerfile .
+        
+    - name: Build CLI image
+      run: |
+        docker build -t cli:test -f platform/cli/Dockerfile .
+        
+    - name: Test images
+      run: |
+        docker run --rm portal:test --version || true
+        docker run --rm cli:test --help || true
+
+  documentation:
+    name: Documentation Build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install mkdocs mkdocs-material mkdocs-mermaid2-plugin
+        
+    - name: Build documentation
+      run: |
+        mkdocs build --strict
+        
+    - name: Upload documentation
+      uses: actions/upload-artifact@v3
+      with:
+        name: documentation
+        path: site/
+
+  notify-status:
+    name: Notify Status
+    runs-on: ubuntu-latest
+    needs: [code-quality, security-scanning, unit-tests, infrastructure-tests, integration-tests, docker-build, documentation]
+    if: always()
+    
+    steps:
+    - name: Notify success
+      if: ${{ needs.code-quality.result == 'success' && needs.security-scanning.result == 'success' && needs.unit-tests.result == 'success' && needs.infrastructure-tests.result == 'success' && needs.integration-tests.result == 'success' && needs.docker-build.result == 'success' && needs.documentation.result == 'success' }}
+      run: |
+        echo "✅ All CI checks passed successfully!"
+        
+    - name: Notify failure
+      if: ${{ needs.code-quality.result == 'failure' || needs.security-scanning.result == 'failure' || needs.unit-tests.result == 'failure' || needs.infrastructure-tests.result == 'failure' || needs.integration-tests.result == 'failure' || needs.docker-build.result == 'failure' || needs.documentation.result == 'failure' }}
+      run: |
+        echo "❌ Some CI checks failed. Please review the logs."
+        exit 1

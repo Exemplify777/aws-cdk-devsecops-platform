@@ -1,0 +1,316 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+        - dev
+        - staging
+        - prod
+      force_deploy:
+        description: 'Force deployment even if no changes detected'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18'
+
+jobs:
+  detect-changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      infrastructure: ${{ steps.changes.outputs.infrastructure }}
+      platform: ${{ steps.changes.outputs.platform }}
+      docs: ${{ steps.changes.outputs.docs }}
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Detect changes
+      uses: dorny/paths-filter@v2
+      id: changes
+      with:
+        filters: |
+          infrastructure:
+            - 'infrastructure/**'
+            - 'app.py'
+            - 'cdk.json'
+            - 'requirements.txt'
+          platform:
+            - 'platform/**'
+            - 'templates/**'
+          docs:
+            - 'docs/**'
+            - 'mkdocs.yml'
+            - 'README.md'
+
+  deploy-dev:
+    name: Deploy to Development
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'dev')
+    environment: 
+      name: development
+      url: ${{ steps.deploy.outputs.portal_url }}
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
+        aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
+        
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        
+    - name: Install CDK
+      run: |
+        npm install -g aws-cdk
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: CDK Bootstrap (if needed)
+      run: |
+        cdk bootstrap --context environment=dev
+        
+    - name: Deploy infrastructure
+      id: deploy
+      if: needs.detect-changes.outputs.infrastructure == 'true' || github.event.inputs.force_deploy == 'true'
+      run: |
+        cdk deploy --all --context environment=dev --require-approval=never
+        
+        # Extract outputs
+        PORTAL_URL=$(aws cloudformation describe-stacks --stack-name Portal-dev --query 'Stacks[0].Outputs[?OutputKey==`CloudFrontURL`].OutputValue' --output text)
+        echo "portal_url=$PORTAL_URL" >> $GITHUB_OUTPUT
+        
+    - name: Deploy platform services
+      if: needs.detect-changes.outputs.platform == 'true' || github.event.inputs.force_deploy == 'true'
+      run: |
+        # Build and deploy platform components
+        echo "Deploying platform services to dev environment"
+        
+    - name: Run smoke tests
+      run: |
+        # Basic health checks
+        echo "Running smoke tests for dev environment"
+        python -m pytest tests/smoke/ -v --env=dev
+        
+    - name: Notify deployment
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "✅ Development deployment completed successfully"
+        else
+          echo "❌ Development deployment failed"
+        fi
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [detect-changes, deploy-dev]
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+    environment: 
+      name: staging
+      url: ${{ steps.deploy.outputs.portal_url }}
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
+        aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
+        
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        
+    - name: Install CDK
+      run: |
+        npm install -g aws-cdk
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: CDK Bootstrap (if needed)
+      run: |
+        cdk bootstrap --context environment=staging
+        
+    - name: Deploy infrastructure
+      id: deploy
+      if: needs.detect-changes.outputs.infrastructure == 'true' || github.event.inputs.force_deploy == 'true'
+      run: |
+        cdk deploy --all --context environment=staging --require-approval=never
+        
+        # Extract outputs
+        PORTAL_URL=$(aws cloudformation describe-stacks --stack-name Portal-staging --query 'Stacks[0].Outputs[?OutputKey==`CloudFrontURL`].OutputValue' --output text)
+        echo "portal_url=$PORTAL_URL" >> $GITHUB_OUTPUT
+        
+    - name: Deploy platform services
+      if: needs.detect-changes.outputs.platform == 'true' || github.event.inputs.force_deploy == 'true'
+      run: |
+        echo "Deploying platform services to staging environment"
+        
+    - name: Run integration tests
+      run: |
+        echo "Running integration tests for staging environment"
+        python -m pytest tests/integration/ -v --env=staging
+        
+    - name: Run performance tests
+      run: |
+        echo "Running performance tests for staging environment"
+        python -m pytest tests/performance/ -v --env=staging
+        
+    - name: Notify deployment
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "✅ Staging deployment completed successfully"
+        else
+          echo "❌ Staging deployment failed"
+        fi
+
+  deploy-prod:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [detect-changes, deploy-staging]
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'prod'
+    environment: 
+      name: production
+      url: ${{ steps.deploy.outputs.portal_url }}
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
+        aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
+        
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        
+    - name: Install CDK
+      run: |
+        npm install -g aws-cdk
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Pre-deployment validation
+      run: |
+        echo "Running pre-deployment validation for production"
+        cdk synth --context environment=prod
+        
+    - name: CDK Bootstrap (if needed)
+      run: |
+        cdk bootstrap --context environment=prod
+        
+    - name: Deploy infrastructure
+      id: deploy
+      if: needs.detect-changes.outputs.infrastructure == 'true' || github.event.inputs.force_deploy == 'true'
+      run: |
+        cdk deploy --all --context environment=prod --require-approval=never
+        
+        # Extract outputs
+        PORTAL_URL=$(aws cloudformation describe-stacks --stack-name Portal-prod --query 'Stacks[0].Outputs[?OutputKey==`CloudFrontURL`].OutputValue' --output text)
+        echo "portal_url=$PORTAL_URL" >> $GITHUB_OUTPUT
+        
+    - name: Deploy platform services
+      if: needs.detect-changes.outputs.platform == 'true' || github.event.inputs.force_deploy == 'true'
+      run: |
+        echo "Deploying platform services to production environment"
+        
+    - name: Post-deployment validation
+      run: |
+        echo "Running post-deployment validation for production"
+        python -m pytest tests/smoke/ -v --env=prod
+        
+    - name: Notify deployment
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "✅ Production deployment completed successfully"
+        else
+          echo "❌ Production deployment failed"
+        fi
+
+  deploy-docs:
+    name: Deploy Documentation
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.docs == 'true' || github.event.inputs.force_deploy == 'true'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install mkdocs mkdocs-material mkdocs-mermaid2-plugin
+        
+    - name: Build documentation
+      run: |
+        mkdocs build
+        
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./site

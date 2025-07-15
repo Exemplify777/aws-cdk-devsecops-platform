@@ -1,0 +1,21 @@
+{
+    "project_name": "My Data Pipeline",
+    "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '-').replace('_', '-') }}",
+    "description": "A scalable data pipeline for ETL/ELT processing",
+    "author_name": "Data Engineering Team",
+    "author_email": "data-team@company.com",
+    "version": "0.1.0",
+    "environment": "dev",
+    "aws_region": "us-east-1",
+    "github_org": "",
+    "python_version": "3.11",
+    "use_docker": "y",
+    "use_github_actions": "y",
+    "use_monitoring": "y",
+    "use_ai_tools": "y",
+    "data_sources": ["s3", "rds", "api"],
+    "processing_engine": ["lambda", "ecs", "glue"],
+    "output_format": ["parquet", "json", "csv"],
+    "schedule": "daily",
+    "created_date": "{{ cookiecutter.created_date }}"
+}

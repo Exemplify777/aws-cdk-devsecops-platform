@@ -109,7 +109,7 @@ graph TB
         Monitor[CloudWatch/X-Ray]
     end
     
-    subgraph "AI Tools"
+    subgraph "AITools"
         CodeGen[Code Generation]
         Analysis[Error Analysis]
         Optimize[Optimization]
@@ -125,8 +125,8 @@ graph TB
     Deploy --> Compute
     Deploy --> Storage
     Deploy --> Monitor
-    Portal --> AI Tools
-    CLI --> AI Tools
+    Portal --> AITools
+    CLI --> AITools
 ```
 
 ## 🎯 Use Cases
@@ -186,7 +186,7 @@ graph TB
 
 ## 📚 Documentation Structure
 
-- **[Getting Started](getting-started/quick-start.md)** - Installation and first steps
+- **[Getting Started](getting-started/quickstart.md)** - Installation and first steps
 - **[Architecture](architecture/overview.md)** - Platform design and components
 - **[User Guide](user-guide/cli.md)** - Day-to-day usage and workflows
 - **[Developer Guide](developer-guide/setup.md)** - Contributing and extending

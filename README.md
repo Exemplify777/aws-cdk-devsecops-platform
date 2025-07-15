@@ -447,7 +447,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Issues**: GitHub Issues
 - **Discussions**: GitHub Discussions
 - **Emergency**: Contact the platform team
-
----
-
-Built with ❤️ for Data & AI Engineering Teams

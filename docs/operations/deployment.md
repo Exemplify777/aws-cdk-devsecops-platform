@@ -14,7 +14,7 @@ graph LR
     end
     
     subgraph "Staging"
-        Staging[Staging Environment]
+        Staging_[Staging Environment]
         StagingTests[Integration Tests]
         SecurityTests[Security Tests]
     end
@@ -26,7 +26,7 @@ graph LR
     end
     
     Dev --> DevTests
-    DevTests --> Staging
+    DevTests --> Staging_
     Staging --> StagingTests
     StagingTests --> SecurityTests
     SecurityTests --> Prod
@@ -34,7 +34,7 @@ graph LR
     ProdTests --> Monitoring
     
     style Dev fill:#d9f7be
-    style Staging fill:#ffe7ba
+    style Staging_ fill:#ffe7ba
     style Prod fill:#ffccc7
 ```
 

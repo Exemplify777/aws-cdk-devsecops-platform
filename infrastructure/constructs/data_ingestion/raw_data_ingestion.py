@@ -7,6 +7,7 @@ schema detection, data validation, and error handling for raw data ingestion.
 
 from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
+import json
 
 from aws_cdk import (
     Duration,
@@ -18,8 +19,6 @@ from aws_cdk import (
     aws_s3_notifications as s3n,
     aws_sqs as sqs,
     aws_cloudwatch as cloudwatch,
-    aws_events as events,
-    aws_events_targets as targets,
 )
 from constructs import Construct
 
@@ -49,15 +48,15 @@ class RawDataIngestionProps(ConstructProps):
     
     # Data Validation
     enable_data_validation: bool = True
-    validation_rules: Dict[str, Any] = None
-    
+    validation_rules: Optional[Dict[str, Any]] = None
+
     # Error Handling
     enable_dlq: bool = True
     max_retry_attempts: int = 3
-    
+
     # Monitoring
     enable_detailed_monitoring: bool = True
-    custom_metrics: List[str] = None
+    custom_metrics: Optional[List[str]] = None
 
 
 class RawDataIngestionConstruct(BaseConstruct):
@@ -118,6 +117,17 @@ class RawDataIngestionConstruct(BaseConstruct):
             lifecycle_rules=self._get_lifecycle_rules() if self.props.enable_lifecycle_policies else None,
             event_bridge_enabled=True
         )
+
+        # Apply standardized tags
+        raw_bucket_tags = self.get_resource_tags(
+            application="data-ingestion",
+            component="raw-storage",
+            data_classification=getattr(self.props, 'data_classification', 'internal'),
+            backup_schedule="daily" if self.environment == "prod" else "weekly"
+        )
+        for key, value in raw_bucket_tags.items():
+            if value:  # Only apply non-None values
+                self.raw_bucket.node.add_metadata(f"tag:{key}", value)
         
         # Processed data bucket
         self.processed_bucket = s3.Bucket(
@@ -131,6 +141,17 @@ class RawDataIngestionConstruct(BaseConstruct):
             removal_policy=self._get_removal_policy(),
             lifecycle_rules=self._get_lifecycle_rules() if self.props.enable_lifecycle_policies else None
         )
+
+        # Apply standardized tags
+        processed_bucket_tags = self.get_resource_tags(
+            application="data-ingestion",
+            component="processed-storage",
+            data_classification=getattr(self.props, 'data_classification', 'internal'),
+            backup_schedule="daily" if self.environment == "prod" else "weekly"
+        )
+        for key, value in processed_bucket_tags.items():
+            if value:  # Only apply non-None values
+                self.processed_bucket.node.add_metadata(f"tag:{key}", value)
         
         # Error bucket for failed processing
         self.error_bucket = s3.Bucket(

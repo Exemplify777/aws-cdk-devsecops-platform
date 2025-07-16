@@ -1,9 +1,11 @@
-# DevSecOps Platform for Data & AI Organization
+# Enterprise CDK Constructs Library
 
 [![CI/CD](https://github.com/your-org/mcp-cdk-ddk/workflows/CI/badge.svg)](https://github.com/your-org/mcp-cdk-ddk/actions)
 [![Security](https://github.com/your-org/mcp-cdk-ddk/workflows/Security%20Scanning/badge.svg)](https://github.com/your-org/mcp-cdk-ddk/actions)
 [![Documentation](https://github.com/your-org/mcp-cdk-ddk/workflows/Documentation/badge.svg)](https://your-org.github.io/mcp-cdk-ddk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Constructs](https://img.shields.io/badge/Constructs-21%2F21%20Complete-brightgreen.svg)](docs/constructs/)
+[![Production Ready](https://img.shields.io/badge/Production-Ready-success.svg)](docs/production/)
 
 A comprehensive DevSecOps platform built with AWS CDK for data engineering and AI/ML workloads. This platform provides enterprise-grade infrastructure, security, compliance, and operational excellence out of the box.
 

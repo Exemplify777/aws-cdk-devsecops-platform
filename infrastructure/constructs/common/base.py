@@ -29,6 +29,16 @@ from .types import ConstructProps, SecurityConfig, MonitoringConfig
 from .mixins import ValidationMixin, SecurityMixin, MonitoringMixin
 from .utils import TaggingUtils, NamingUtils
 from .validators import InputValidator, SecurityValidator
+from .conventions import (
+    ResourceNaming,
+    ResourceTagging,
+    ValidationReport,
+    ValidationSeverity,
+    validate_construct_props,
+    SecurityValidator as ConventionSecurityValidator,
+    ComplianceValidator,
+    CostOptimizationValidator
+)
 
 logger = logging.getLogger(__name__)
 
@@ -69,19 +79,23 @@ class BaseConstruct(Construct, ValidationMixin, SecurityMixin, MonitoringMixin):
         self.environment = props.environment
         self.project_name = props.project_name
         self.construct_name = construct_id
-        
+
         # Initialize environment configuration
         self.env_config = EnvironmentConfig(self.environment)
-        
-        # Validate inputs
+
+        # Initialize convention utilities
+        self._setup_conventions()
+
+        # Validate inputs and conventions
         self._validate_inputs()
-        
+        self._validate_conventions()
+
         # Initialize security configuration
         self._setup_security()
-        
+
         # Initialize monitoring
         self._setup_monitoring()
-        
+
         # Apply standard tags
         self._apply_tags()
         
@@ -350,10 +364,205 @@ class BaseConstruct(Construct, ValidationMixin, SecurityMixin, MonitoringMixin):
             "optimization_recommendations": []
         }
     
+    def _setup_conventions(self) -> None:
+        """Setup convention utilities for naming and tagging."""
+        # Determine service category based on construct type
+        service_mapping = {
+            "Data": "data",
+            "ML": "ml",
+            "Api": "api",
+            "Infrastructure": "infra",
+            "Messaging": "msg",
+            "Security": "sec",
+            "Monitoring": "mon"
+        }
+
+        # Extract service from construct class name
+        service = "infra"  # default
+        for key, value in service_mapping.items():
+            if key in self.__class__.__name__:
+                service = value
+                break
+
+        # Initialize naming utility
+        self.naming = ResourceNaming(
+            project=self.project_name.lower().replace("_", "-")[:8],
+            environment=self.environment,
+            service=service,
+            region=self.region if hasattr(self, 'region') else None
+        )
+
+        # Initialize tagging utility
+        self.tagging = ResourceTagging(
+            environment=self.environment,
+            project=self.project_name,
+            owner=getattr(self.props, 'owner', 'platform-team'),
+            cost_center=getattr(self.props, 'cost_center', 'CC-1234')
+        )
+
+    def _validate_conventions(self) -> None:
+        """Validate construct properties against conventions."""
+        # Get validators based on construct type
+        validators = [
+            self._validate_security_conventions,
+            self._validate_compliance_conventions,
+            self._validate_cost_conventions
+        ]
+
+        # Run validation
+        validation_report = validate_construct_props(
+            construct_name=self.__class__.__name__,
+            props=self.props,
+            validators=validators
+        )
+
+        # Handle validation results
+        if not validation_report.overall_status:
+            errors = validation_report.get_errors()
+            error_messages = [f"{error.property_name}: {error.message}" for error in errors]
+            raise ValueError(f"Convention validation failed for {self.__class__.__name__}: {error_messages}")
+
+        # Log warnings
+        warnings = validation_report.get_warnings()
+        for warning in warnings:
+            print(f"WARNING [{self.__class__.__name__}]: {warning.message}")
+
+    def _validate_security_conventions(self, props: ConstructProps) -> List:
+        """Validate security conventions."""
+        results = []
+
+        # Check encryption requirements
+        if hasattr(props, 'enable_encryption'):
+            result = ConventionSecurityValidator.validate_encryption_config(
+                props.enable_encryption,
+                self.environment
+            )
+            results.append(result)
+
+        return results
+
+    def _validate_compliance_conventions(self, props: ConstructProps) -> List:
+        """Validate compliance conventions."""
+        results = []
+
+        # Check data retention if applicable
+        if hasattr(props, 'retention_days'):
+            compliance_framework = getattr(props, 'compliance_framework', None)
+            result = ComplianceValidator.validate_data_retention(
+                props.retention_days,
+                compliance_framework
+            )
+            results.append(result)
+
+        # Check backup requirements
+        if hasattr(props, 'enable_backup'):
+            compliance_framework = getattr(props, 'compliance_framework', None)
+            result = ComplianceValidator.validate_backup_requirements(
+                props.enable_backup,
+                self.environment,
+                compliance_framework
+            )
+            results.append(result)
+
+        return results
+
+    def _validate_cost_conventions(self, props: ConstructProps) -> List:
+        """Validate cost optimization conventions."""
+        results = []
+
+        # Check instance sizing if applicable
+        if hasattr(props, 'instance_type'):
+            result = CostOptimizationValidator.validate_instance_sizing(
+                props.instance_type,
+                self.environment
+            )
+            results.append(result)
+
+        # Check lifecycle policies if applicable
+        if hasattr(props, 'enable_lifecycle'):
+            storage_type = getattr(props, 'storage_type', 's3')
+            result = CostOptimizationValidator.validate_storage_lifecycle(
+                props.enable_lifecycle,
+                storage_type
+            )
+            results.append(result)
+
+        return results
+
+    def get_resource_name(self, component: str, identifier: Optional[str] = None) -> str:
+        """
+        Generate standardized resource name using conventions.
+
+        Args:
+            component: Component type (e.g., 'processor', 'storage')
+            identifier: Optional identifier for uniqueness
+
+        Returns:
+            str: Standardized resource name
+        """
+        # Use appropriate naming method based on component type
+        if 'bucket' in component.lower():
+            return self.naming.s3_bucket(component, identifier=identifier)
+        elif 'function' in component.lower() or 'lambda' in component.lower():
+            return self.naming.lambda_function(component, identifier=identifier)
+        elif 'table' in component.lower():
+            return self.naming.dynamodb_table(component, identifier=identifier)
+        elif 'queue' in component.lower():
+            is_fifo = getattr(self.props, 'fifo', False)
+            return self.naming.sqs_queue(component, is_fifo=is_fifo, identifier=identifier)
+        elif 'topic' in component.lower():
+            is_fifo = getattr(self.props, 'fifo', False)
+            return self.naming.sns_topic(component, is_fifo=is_fifo, identifier=identifier)
+        elif 'stream' in component.lower():
+            return self.naming.kinesis_stream(component, identifier=identifier)
+        elif 'role' in component.lower():
+            return self.naming.iam_role(component, identifier=identifier)
+        elif 'key' in component.lower():
+            return self.naming.kms_key_alias(component, identifier=identifier)
+        else:
+            # Generic naming
+            return self.naming._generate_base_name(component, identifier)
+
+    def get_resource_tags(self,
+                         application: str,
+                         component: str,
+                         **additional_tags) -> Dict[str, str]:
+        """
+        Generate standardized resource tags using conventions.
+
+        Args:
+            application: Application name
+            component: Component type
+            **additional_tags: Additional custom tags
+
+        Returns:
+            Dict[str, str]: Complete tag set
+        """
+        # Add construct-specific tags
+        tags = {
+            "data_classification": getattr(self.props, 'data_classification', None),
+            "pii_data": getattr(self.props, 'pii_data', None),
+            "compliance_framework": getattr(self.props, 'compliance_framework', None),
+            "backup_schedule": getattr(self.props, 'backup_schedule', None),
+            "monitoring_level": getattr(self.props, 'monitoring_level', 'standard')
+        }
+
+        # Remove None values
+        tags = {k: v for k, v in tags.items() if v is not None}
+
+        # Add additional tags
+        tags.update(additional_tags)
+
+        return self.tagging.get_tags(
+            application=application,
+            component=component,
+            **tags
+        )
+
     def get_security_posture(self) -> Dict[str, Any]:
         """
         Get security posture assessment for this construct.
-        
+
         Returns:
             Dict[str, Any]: Security assessment data
         """

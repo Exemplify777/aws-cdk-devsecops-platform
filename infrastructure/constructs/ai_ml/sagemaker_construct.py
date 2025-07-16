@@ -233,6 +233,17 @@ class SageMakerConstruct(BaseConstruct):
                     )
                 ]
             )
+
+            # Apply standardized tags to model artifacts bucket
+            artifacts_bucket_tags = self.get_resource_tags(
+                application="ml-platform",
+                component="model-artifacts",
+                data_classification=getattr(self.props, 'data_classification', 'confidential'),
+                backup_schedule="daily"
+            )
+            for key, value in artifacts_bucket_tags.items():
+                if value:  # Only apply non-None values
+                    self.model_artifacts_bucket.node.add_metadata(f"tag:{key}", value)
         else:
             self.model_artifacts_bucket = s3.Bucket.from_bucket_name(
                 self,

@@ -6,7 +6,6 @@ for validation, security, monitoring, and other cross-cutting concerns.
 """
 
 from typing import Dict, Any, List, Optional
-from abc import ABC, abstractmethod
 import logging
 
 from aws_cdk import (
@@ -26,7 +25,7 @@ from .types import ConstructProps, SecurityConfig, MonitoringConfig
 logger = logging.getLogger(__name__)
 
 
-class ValidationMixin(ABC):
+class ValidationMixin:
     """
     Mixin providing input validation capabilities for constructs.
     
@@ -101,7 +100,7 @@ class ValidationMixin(ABC):
             raise ValueError("log_retention_days must be between 1 and 3653")
 
 
-class SecurityMixin(ABC):
+class SecurityMixin:
     """
     Mixin providing security capabilities for constructs.
     
@@ -205,7 +204,7 @@ class SecurityMixin(ABC):
         return RemovalPolicy.DESTROY
 
 
-class MonitoringMixin(ABC):
+class MonitoringMixin:
     """
     Mixin providing monitoring and observability capabilities for constructs.
     
@@ -332,15 +331,14 @@ class MonitoringMixin(ABC):
                 metric_value="1"
             )
     
-    @abstractmethod
     def _get_monitoring_metrics(self) -> List[cloudwatch.Metric]:
         """
         Get list of metrics to monitor for this construct.
-        
+
         Returns:
             List[cloudwatch.Metric]: List of metrics
         """
-        pass
+        return []
     
     def create_dashboard_widget(self, title: str, metrics: List[cloudwatch.Metric]) -> cloudwatch.GraphWidget:
         """
@@ -361,7 +359,7 @@ class MonitoringMixin(ABC):
         )
 
 
-class CostOptimizationMixin(ABC):
+class CostOptimizationMixin:
     """
     Mixin providing cost optimization capabilities for constructs.
     
@@ -402,7 +400,7 @@ class CostOptimizationMixin(ABC):
         }
 
 
-class ComplianceMixin(ABC):
+class ComplianceMixin:
     """
     Mixin providing compliance capabilities for constructs.
     

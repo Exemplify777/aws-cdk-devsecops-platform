@@ -186,7 +186,18 @@ class DynamoDbConstruct(BaseConstruct):
             contributor_insights_enabled=self.props.enable_contributor_insights,
             removal_policy=self._get_removal_policy()
         )
-        
+
+        # Apply standardized tags
+        table_tags = self.get_resource_tags(
+            application="database",
+            component="dynamodb-table",
+            data_classification=getattr(self.props, 'data_classification', 'internal'),
+            backup_schedule="daily" if self.props.enable_point_in_time_recovery else "none"
+        )
+        for key, value in table_tags.items():
+            if value:  # Only apply non-None values
+                self.table.node.add_metadata(f"tag:{key}", value)
+
         # Add Global Secondary Indexes
         for gsi in self.props.global_secondary_indexes:
             self.table.add_global_secondary_index(

@@ -61,43 +61,58 @@ ddk-cli deploy --env dev
 
 ## 📁 Project Structure
 
-```
+```text
 mcp-cdk-ddk/
 ├── infrastructure/          # AWS CDK infrastructure code
-│   ├── stacks/             # CDK stack definitions
-│   │   ├── core_infrastructure_stack.py  # VPC, S3, KMS, IAM
-│   │   ├── security_stack.py             # Security groups, WAF, GuardDuty
-│   │   ├── data_pipeline_stack.py        # ETL/ELT infrastructure
-│   │   ├── monitoring_stack.py           # CloudWatch, alarms, dashboards
-│   │   ├── portal_stack.py               # Self-service portal
-│   │   └── ai_tools_stack.py             # AI-powered development tools
-│   └── constructs/         # Reusable CDK constructs
-├── platform/               # Platform services and tools
+│   └── constructs/         # Enterprise CDK constructs library (21 constructs)
+│       ├── common/         # Common utilities and base classes
+│       │   ├── base.py     # BaseConstruct with convention enforcement
+│       │   ├── conventions.py  # Naming, tagging, and validation utilities
+│       │   ├── mixins.py   # Reusable functionality mixins
+│       │   └── types.py    # Common type definitions
+│       ├── data_ingestion/ # Data ingestion constructs (7 constructs)
+│       │   ├── raw_data_ingestion.py      # S3 → Lambda → Glue pipeline
+│       │   ├── streaming_ingestion.py     # Kinesis → Lambda → S3
+│       │   ├── api_ingestion.py           # API Gateway → Lambda → S3
+│       │   ├── database_ingestion.py      # RDS/DynamoDB → DMS → S3
+│       │   ├── file_ingestion.py          # S3 event-driven processing
+│       │   ├── batch_ingestion.py         # Scheduled AWS Batch processing
+│       │   └── realtime_ingestion.py      # Kinesis Data Firehose
+│       ├── infrastructure/ # Infrastructure constructs (7 constructs)
+│       │   ├── vpc_construct.py           # Multi-AZ VPC with endpoints
+│       │   ├── lambda_construct.py        # Enterprise Lambda functions
+│       │   ├── dynamodb_construct.py      # DynamoDB with auto-scaling
+│       │   ├── ec2_construct.py           # Auto-scaling groups
+│       │   ├── rds_construct.py           # Multi-AZ databases
+│       │   ├── ecs_construct.py           # Fargate/EC2 services
+│       │   └── msk_construct.py           # Managed Kafka (shared)
+│       ├── messaging/      # Messaging constructs (4 constructs)
+│       │   ├── msk_construct.py           # Managed Kafka with encryption
+│       │   ├── kinesis_construct.py       # Data streams with analytics
+│       │   ├── sqs_construct.py           # Standard/FIFO queues with DLQ
+│       │   └── sns_construct.py           # Multi-protocol notifications
+│       └── ai_ml/          # AI/ML constructs (3 constructs)
+│           ├── bedrock_construct.py       # Amazon Bedrock with guardrails
+│           ├── sagemaker_construct.py     # Complete ML lifecycle
+│           └── model_deployment_construct.py  # A/B testing & canary
+├── platform_tools/        # Platform services and tools (renamed from platform)
 │   ├── cli/                # Project generator CLI
-│   │   ├── main.py         # CLI entry point
-│   │   ├── config.py       # Configuration management
-│   │   ├── templates.py    # Template handling
-│   │   ├── aws.py          # AWS integration
-│   │   └── github.py       # GitHub integration
-│   └── portal/             # Self-service web portal
-├── templates/              # Project templates
-│   └── data-pipeline/      # ETL/ELT pipeline template
-├── .github/workflows/      # GitHub Actions workflows
-│   ├── ci.yml              # Continuous Integration
-│   ├── cd.yml              # Continuous Deployment
-│   └── security.yml        # Security scanning
-├── security/               # Security and compliance tools
-│   ├── scanner.py          # Security scanner
-│   ├── compliance.py       # Compliance automation
-│   └── rules/              # Compliance rules
-│       ├── soc2.yaml       # SOC 2 compliance rules
-│       ├── iso27001.yaml   # ISO 27001 compliance rules
-│       └── gdpr.yaml       # GDPR compliance rules
-├── docs/                   # Documentation
-└── tests/                  # Test suites
-    ├── unit/               # Unit tests
-    ├── integration/        # Integration tests
-    ├── infrastructure/     # Infrastructure tests
+│   ├── portal/             # Self-service web portal
+│   └── ai-tools/           # AI-powered development tools
+├── docs/                   # Comprehensive documentation
+│   ├── conventions/        # Convention documentation
+│   │   ├── aws-resource-naming.md         # Naming conventions
+│   │   ├── aws-resource-tagging.md        # Tagging strategy
+│   │   └── validation-framework.md       # Validation framework
+│   ├── constructs/         # Construct documentation
+│   ├── security/           # Security best practices
+│   └── production/         # Production deployment guides
+├── tests/                  # Comprehensive test suites
+│   ├── unit/               # Unit tests including convention tests
+│   ├── integration/        # Integration tests
+│   └── security/           # Security and compliance tests
+├── scripts/                # Deployment and utility scripts
+└── .github/workflows/      # CI/CD workflows
     └── smoke/              # Smoke tests
 ```
 

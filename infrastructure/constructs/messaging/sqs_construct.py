@@ -191,7 +191,18 @@ class SqsConstruct(BaseConstruct):
             encryption_master_key=self.encryption_key if self.props.enable_encryption else None,
             removal_policy=self._get_removal_policy()
         )
-        
+
+        # Apply standardized tags
+        queue_tags = self.get_resource_tags(
+            application="messaging",
+            component="sqs-queue",
+            data_classification=getattr(self.props, 'data_classification', 'internal'),
+            monitoring_level="enhanced" if self.props.enable_detailed_monitoring else "standard"
+        )
+        for key, value in queue_tags.items():
+            if value:  # Only apply non-None values
+                self.queue.node.add_metadata(f"tag:{key}", value)
+
         # Configure redrive allow policy
         if self.props.enable_redrive_allow_policy and hasattr(self, 'dead_letter_queue'):
             sqs.CfnQueue(

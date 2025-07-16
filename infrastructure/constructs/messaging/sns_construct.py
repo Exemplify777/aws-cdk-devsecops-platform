@@ -447,7 +447,7 @@ class SnsConstruct(BaseConstruct):
                 f"High{protocol}DeliveryDelay",
                 cloudwatch.Metric(
                     namespace="AWS/SNS",
-                    metric_name=f"NumberOfNotificationsDeliveryDelayed",
+                    metric_name="NumberOfNotificationsDeliveryDelayed",
                     dimensions_map={
                         "TopicName": self.topic.topic_name
                     }
@@ -536,7 +536,7 @@ class SnsConstruct(BaseConstruct):
         """Grant publish permissions to the topic."""
         return self.topic.grant_publish(grantee)
     
-    def add_subscription(self, subscription: subscriptions.ITopicSubscription) -> sns.Subscription:
+    def add_subscription(self, subscription) -> sns.Subscription:
         """Add a subscription to the topic."""
         return self.topic.add_subscription(subscription)
     

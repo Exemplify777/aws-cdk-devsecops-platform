@@ -19,12 +19,9 @@ License: MIT
 
 from .common import *
 from .data_ingestion import *
-from .ml_ai import *
-from .data_processing import *
-from .analytics import *
-from .security_compliance import *
-from .monitoring import *
-from .disaster_recovery import *
+from .infrastructure import *
+from .messaging import *
+from .ai_ml import *
 
 __version__ = "1.0.0"
 __author__ = "DevSecOps Platform Team"

@@ -266,6 +266,17 @@ class LambdaConstruct(BaseConstruct):
             ) if self.props.enable_code_signing and self.props.code_signing_config_arn else None
         )
         
+        # Apply standardized tags
+        lambda_tags = self.get_resource_tags(
+            application="compute",
+            component="lambda-function",
+            data_classification=getattr(self.props, 'data_classification', 'internal'),
+            monitoring_level="enhanced" if self.props.enable_insights else "standard"
+        )
+        for key, value in lambda_tags.items():
+            if value:  # Only apply non-None values
+                self.lambda_function.node.add_metadata(f"tag:{key}", value)
+
         # Configure provisioned concurrency
         if self.props.provisioned_concurrency:
             self.lambda_function.add_alias(

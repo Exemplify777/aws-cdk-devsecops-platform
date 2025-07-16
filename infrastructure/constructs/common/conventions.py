@@ -7,7 +7,7 @@ and validation rules across all constructs in the platform.
 
 import re
 import ipaddress
-from typing import Dict, List, Optional, Any, Union, Callable
+from typing import Dict, List, Optional, Any, Callable
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
@@ -188,8 +188,12 @@ class ResourceNaming:
         # Validate SQS naming rules
         if len(name) > 80:
             raise ValueError(f"SQS queue name too long: {name} (max 80 chars)")
-        if not re.match(r"^[a-zA-Z0-9-_]+(\\.fifo)?$", name):
-            raise ValueError(f"Invalid SQS queue name: {name}")
+        if is_fifo:
+            if not re.match(r"^[a-zA-Z0-9-_]+\.fifo$", name):
+                raise ValueError(f"Invalid SQS FIFO queue name: {name}")
+        else:
+            if not re.match(r"^[a-zA-Z0-9-_]+$", name):
+                raise ValueError(f"Invalid SQS queue name: {name}")
         
         return name
     
@@ -202,8 +206,12 @@ class ResourceNaming:
         # Validate SNS naming rules
         if len(name) > 256:
             raise ValueError(f"SNS topic name too long: {name} (max 256 chars)")
-        if not re.match(r"^[a-zA-Z0-9-_]+(\\.fifo)?$", name):
-            raise ValueError(f"Invalid SNS topic name: {name}")
+        if is_fifo:
+            if not re.match(r"^[a-zA-Z0-9-_]+\.fifo$", name):
+                raise ValueError(f"Invalid SNS FIFO topic name: {name}")
+        else:
+            if not re.match(r"^[a-zA-Z0-9-_]+$", name):
+                raise ValueError(f"Invalid SNS topic name: {name}")
         
         return name
     
@@ -274,7 +282,7 @@ class ResourceTagging:
             "CreatedDate": self.created_date
         }
     
-    def get_tags(self, 
+    def get_tags(self,
                  application: str,
                  component: str,
                  data_classification: Optional[str] = None,
@@ -282,7 +290,7 @@ class ResourceTagging:
                  compliance_framework: Optional[str] = None,
                  backup_schedule: Optional[str] = None,
                  monitoring_level: Optional[str] = None,
-                 **additional_tags) -> Dict[str, str]:
+                 **additional_tags: Any) -> Dict[str, str]:
         """
         Get complete tag set for a resource.
         
@@ -543,7 +551,7 @@ class CostOptimizationValidator:
         )
 
 
-def validate_construct_props(construct_name: str, props: Any, validators: List[Callable] = None) -> ValidationReport:
+def validate_construct_props(construct_name: str, props: Any, validators: Optional[List[Callable]] = None) -> ValidationReport:
     """
     Validate construct properties using multiple validators.
     

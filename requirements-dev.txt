@@ -55,7 +55,7 @@ pip-audit>=2.6.0
 cyclonedx-bom>=4.0.0
 
 # Debugging
-pdb++>=0.10.3
+#pdb++>=0.10.3
 icecream>=2.1.3
 
 # Environment Management

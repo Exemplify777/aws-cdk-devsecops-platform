@@ -1,8 +1,8 @@
-# Enterprise CDK Constructs Library
+# DevSecOps platform
 
-[![CI/CD](https://github.com/your-org/mcp-cdk-ddk/workflows/CI/badge.svg)](https://github.com/your-org/mcp-cdk-ddk/actions)
-[![Security](https://github.com/your-org/mcp-cdk-ddk/workflows/Security%20Scanning/badge.svg)](https://github.com/your-org/mcp-cdk-ddk/actions)
-[![Documentation](https://github.com/your-org/mcp-cdk-ddk/workflows/Documentation/badge.svg)](https://your-org.github.io/mcp-cdk-ddk)
+[![CI/CD](https://github.com/Exemplify777/aws-cdk-devsecops-platform/workflows/CI/badge.svg)](https://github.com/Exemplify777/aws-cdk-devsecops-platform/actions)
+[![Security](https://github.com/Exemplify777/aws-cdk-devsecops-platform/workflows/Security%20Scanning/badge.svg)](https://github.com/Exemplify777/aws-cdk-devsecops-platform/actions)
+[![Documentation](https://github.com/Exemplify777/aws-cdk-devsecops-platform/workflows/Documentation/badge.svg)](https://Exemplify777.github.io/aws-cdk-devsecops-platform)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Constructs](https://img.shields.io/badge/Constructs-21%2F21%20Complete-brightgreen.svg)](docs/constructs/)
 [![Production Ready](https://img.shields.io/badge/Production-Ready-success.svg)](docs/production/)
@@ -62,7 +62,7 @@ ddk-cli deploy --env dev
 ## 📁 Project Structure
 
 ```text
-mcp-cdk-ddk/
+aws-cdk-devsecops-platform/
 ├── infrastructure/          # AWS CDK infrastructure code
 │   └── constructs/         # Enterprise CDK constructs library (21 constructs)
 │       ├── common/         # Common utilities and base classes
@@ -128,8 +128,8 @@ mcp-cdk-ddk/
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/mcp-cdk-ddk.git
-cd mcp-cdk-ddk
+git clone https://github.com/Exemplify777/aws-cdk-devsecops-platform.git
+cd aws-cdk-devsecops-platform
 
 # Install dependencies
 pip install -r requirements.txt
@@ -148,7 +148,7 @@ pip install -e .
 1. **Clone and setup the repository:**
 ```bash
 git clone <repository-url>
-cd mcp-cdk-ddk
+cd aws-cdk-devsecops-platform
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt

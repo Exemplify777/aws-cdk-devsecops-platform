@@ -331,10 +331,10 @@ Now that you have a working pipeline:
 
 ## Getting Help
 
-- **Documentation**: [Complete Documentation](https://your-org.github.io/mcp-cdk-ddk)
+- **Documentation**: [Complete Documentation](https://Exemplify777.github.io/aws-cdk-devsecops-platform)
 - **CLI Help**: `ddk-cli --help` or `ddk-cli COMMAND --help`
-- **GitHub Issues**: [Report Issues](https://github.com/your-org/mcp-cdk-ddk/issues)
-- **Slack Channel**: [#devsecops-platform](https://your-org.slack.com/channels/devsecops-platform)
+- **GitHub Issues**: [Report Issues](https://github.com/Exemplify777/aws-cdk-devsecops-platform/issues)
+- **Slack Channel**: [#devsecops-platform](https://Exemplify777.slack.com/channels/devsecops-platform)
 
 ## Troubleshooting
 

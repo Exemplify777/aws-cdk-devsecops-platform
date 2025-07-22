@@ -113,8 +113,8 @@ cdk deploy CoreInfrastructure-dev --context environment=dev
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/mcp-cdk-ddk.git
-cd mcp-cdk-ddk
+git clone https://github.com/Exemplify777/aws-cdk-devsecops-platform.git
+cd aws-cdk-devsecops-platform
 
 # Install dependencies
 pip install -r requirements.txt

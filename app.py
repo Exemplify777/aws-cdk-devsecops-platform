@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-DevSecOps Platform for Data & AI Organization
+DevSecOps Platform for data pipelines and ML workflows
 Main CDK application entry point
 """
 

@@ -317,7 +317,7 @@ github:
 
 templates:
   default_template: data-pipeline
-  template_repository: https://github.com/my-org/ddk-templates
+  template_repository: https://github.com/Exemplify777/aws-cdk-devsecops-platform
 
 security:
   enable_scanning: true

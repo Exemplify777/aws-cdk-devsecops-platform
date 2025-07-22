@@ -27,7 +27,7 @@ from platform.cli.aws import AWSManager
 
 app = typer.Typer(
     name="ddk-cli",
-    help="DevSecOps Platform CLI for Data & AI Organization",
+    help="DevSecOps Platform CLI for data pipelines and ML workflows",
     add_completion=False,
 )
 console = Console()

@@ -1,6 +1,6 @@
 # Frequently Asked Questions
 
-Common questions and answers about the DevSecOps Platform for Data & AI Organization.
+Common questions and answers about the DevSecOps Platform for data pipelines and ML workflows.
 
 ## General Questions
 

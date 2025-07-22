@@ -75,8 +75,8 @@ graph TB
 pip install devsecops-platform-constructs
 
 # Or install from source
-git clone https://github.com/your-org/mcp-cdk-ddk.git
-cd mcp-cdk-ddk
+git clone https://github.com/Exemplify777/aws-cdk-devsecops-platform.git
+cd aws-cdk-devsecops-platform
 pip install -e infrastructure/constructs/
 ```
 

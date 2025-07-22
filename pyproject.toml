@@ -3,13 +3,13 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mcp-cdk-ddk"
+name = "aws-cdk-devsecops-platform"
 version = "1.0.0"
-description = "DevSecOps Platform for Data & AI Organization"
+description = "DevSecOps Platform for data pipelines and ML workflows"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "Data & AI Platform Team", email = "platform-team@company.com"}
+    {name = "DevSecOps Team", email = "platform-team@company.com"}
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -65,10 +65,10 @@ ddk-cli = "platform.cli.main:app"
 ddk-portal = "platform.portal.main:main"
 
 [project.urls]
-Homepage = "https://github.com/company/mcp-cdk-ddk"
-Documentation = "https://mcp-cdk-ddk.readthedocs.io/"
-Repository = "https://github.com/company/mcp-cdk-ddk"
-"Bug Tracker" = "https://github.com/company/mcp-cdk-ddk/issues"
+Homepage = "https://github.com/company/aws-cdk-devsecops-platform"
+Documentation = "https://aws-cdk-devsecops-platform.readthedocs.io/"
+Repository = "https://github.com/company/aws-cdk-devsecops-platform"
+"Bug Tracker" = "https://github.com/company/aws-cdk-devsecops-platform/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]

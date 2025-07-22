@@ -1,6 +1,6 @@
 # DevSecOps Platform Documentation
 
-Welcome to the comprehensive documentation for the DevSecOps Platform for Data & AI Organization. This platform provides enterprise-grade infrastructure, security, compliance, and operational excellence for data engineering and AI/ML workloads.
+Welcome to the comprehensive documentation for the DevSecOps Platform for data pipelines and ML workflows. This platform provides enterprise-grade infrastructure, security, compliance, and operational excellence for data engineering and AI/ML workloads.
 
 ## 🚀 Quick Start
 
@@ -207,9 +207,9 @@ This platform is designed to meet enterprise security and compliance requirement
 
 ## 🤝 Community & Support
 
-- **GitHub Issues**: [Report bugs and request features](https://github.com/your-org/mcp-cdk-ddk/issues)
-- **Slack Channel**: [#devsecops-platform](https://your-org.slack.com/channels/devsecops-platform)
-- **Documentation**: [Complete documentation](https://your-org.github.io/mcp-cdk-ddk)
+- **GitHub Issues**: [Report bugs and request features](https://github.com/Exemplify777/aws-cdk-devsecops-platform/issues)
+- **Slack Channel**: [#devsecops-platform](https://Exemplify777.slack.com/channels/devsecops-platform)
+- **Documentation**: [Complete documentation](https://Exemplify777.github.io/aws-cdk-devsecops-platform)
 - **Contributing**: [Contribution guidelines](developer-guide/contributing.md)
 
 ## 📈 Roadmap

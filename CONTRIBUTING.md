@@ -1,6 +1,6 @@
 # Contributing to DevSecOps Platform
 
-We welcome contributions to the DevSecOps Platform for Data & AI Organization! This document provides guidelines for contributing to the project.
+We welcome contributions to the DevSecOps Platform for data pipelines and ML workflows! This document provides guidelines for contributing to the project.
 
 ## Table of Contents
 
@@ -40,8 +40,8 @@ This project adheres to a code of conduct. By participating, you are expected to
 
 1. **Fork and Clone**:
    ```bash
-   git clone https://github.com/your-username/mcp-cdk-ddk.git
-   cd mcp-cdk-ddk
+   git clone https://github.com/your-username/aws-cdk-devsecops-platform.git
+   cd aws-cdk-devsecops-platform
    ```
 
 2. **Set Up Environment**:
@@ -83,7 +83,7 @@ Before starting work, create an issue to discuss:
 ```bash
 # Fork the repository on GitHub
 # Clone your fork
-git clone https://github.com/your-username/mcp-cdk-ddk.git
+git clone https://github.com/your-username/aws-cdk-devsecops-platform.git
 
 # Create a feature branch
 git checkout -b feature/your-feature-name
@@ -373,13 +373,6 @@ We use Semantic Versioning (SemVer):
 2. **Update Changelog**: Add release notes to `CHANGELOG.md`
 3. **Create Release**: Create GitHub release with tag
 4. **Deploy**: Automated deployment via GitHub Actions
-
-## Getting Help
-
-- **Documentation**: [Complete Documentation](https://your-org.github.io/mcp-cdk-ddk)
-- **Issues**: [GitHub Issues](https://github.com/your-org/mcp-cdk-ddk/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-org/mcp-cdk-ddk/discussions)
-- **Slack**: [#devsecops-platform](https://your-org.slack.com/channels/devsecops-platform)
 
 ## Recognition
 

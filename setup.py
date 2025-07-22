@@ -19,12 +19,12 @@ requirements = read_requirements("requirements.txt")
 setup(
     name="ddk-cli",
     version="1.0.0",
-    author="Data & AI Platform Team",
+    author="DevSecOps Team",
     author_email="data-platform@company.com",
-    description="DevSecOps Platform CLI for Data & AI Organization",
+    description="DevSecOps Platform CLI for data pipelines and ML workflows",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/your-org/mcp-cdk-ddk",
+    url="https://github.com/Exemplify777/aws-cdk-devsecops-platform",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -85,8 +85,8 @@ setup(
     zip_safe=False,
     keywords="devsecops, aws, cdk, data-engineering, ai, ml, security, compliance",
     project_urls={
-        "Bug Reports": "https://github.com/your-org/mcp-cdk-ddk/issues",
-        "Source": "https://github.com/your-org/mcp-cdk-ddk",
-        "Documentation": "https://your-org.github.io/mcp-cdk-ddk",
+        "Bug Reports": "https://github.com/Exemplify777/aws-cdk-devsecops-platform/issues",
+        "Source": "https://github.com/Exemplify777/aws-cdk-devsecops-platform",
+        "Documentation": "https://Exemplify777.github.io/aws-cdk-devsecops-platform",
     },
 )

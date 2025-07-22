@@ -1,6 +1,6 @@
 # Installation Guide
 
-This guide will walk you through installing and setting up the DevSecOps Platform for Data & AI Organization.
+This guide will walk you through installing and setting up the DevSecOps Platform for data pipelines and ML workflows.
 
 ## Prerequisites
 
@@ -30,8 +30,8 @@ Before installing the platform, ensure you have the following prerequisites:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-org/mcp-cdk-ddk.git
-cd mcp-cdk-ddk
+git clone https://github.com/Exemplify777/aws-cdk-devsecops-platform.git
+cd aws-cdk-devsecops-platform
 ```
 
 ### 2. Set Up Python Environment
@@ -142,7 +142,7 @@ STAGING_ACCOUNT_ID=123456789013
 PROD_ACCOUNT_ID=123456789014
 
 # GitHub Configuration (optional)
-GITHUB_ORG=your-organization
+GITHUB_ORG=Exemplify777
 GITHUB_TOKEN=ghp_your_token_here
 
 # Notification Configuration (optional)
@@ -168,12 +168,12 @@ aws:
   prod_account_id: "123456789014"
 
 github:
-  organization: your-organization
+  organization: Exemplify777
   token: ghp_your_token_here
 
 templates:
   default_template: data-pipeline
-  template_repository: https://github.com/your-org/ddk-templates
+  template_repository: https://github.com/Exemplify777/aws-cdk-devsecops-platform
 
 security:
   enable_scanning: true
@@ -232,9 +232,9 @@ which ddk-cli
 
 ### Getting Help
 
-- **Documentation**: [Complete Documentation](https://your-org.github.io/mcp-cdk-ddk)
-- **GitHub Issues**: [Report Issues](https://github.com/your-org/mcp-cdk-ddk/issues)
-- **Slack Channel**: [#devsecops-platform](https://your-org.slack.com/channels/devsecops-platform)
+- **Documentation**: [Complete Documentation](https://Exemplify777.github.io/aws-cdk-devsecops-platform)
+- **GitHub Issues**: [Report Issues](https://github.com/Exemplify777/aws-cdk-devsecops-platform/issues)
+- **Slack Channel**: [#devsecops-platform](https://Exemplify777.slack.com/channels/devsecops-platform)
 
 ## Next Steps
 
@@ -265,5 +265,5 @@ rm -rf venv
 
 # Remove project directory
 cd ..
-rm -rf mcp-cdk-ddk
+rm -rf aws-cdk-devsecops-platform
 ```

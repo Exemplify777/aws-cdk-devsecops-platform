@@ -1,6 +1,6 @@
 # Architecture Overview
 
-The DevSecOps Platform for Data & AI Organization is built on AWS using a microservices architecture with security-by-design principles and comprehensive observability.
+The DevSecOps Platform for data pipelines and ML workflows is built on AWS using a microservices architecture with security-by-design principles and comprehensive observability.
 
 ## High-Level Architecture
 

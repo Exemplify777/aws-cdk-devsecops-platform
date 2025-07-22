@@ -319,7 +319,7 @@ git commit -m "Initial data pipeline implementation"
 
 # Create GitHub repository and push
 gh repo create sales-analytics --private
-git remote add origin https://github.com/your-org/sales-analytics.git
+git remote add origin https://github.com/Exemplify777/sales-analytics.git
 git push -u origin main
 ```
 

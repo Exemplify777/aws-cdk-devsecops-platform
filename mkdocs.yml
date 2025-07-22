@@ -1,10 +1,10 @@
-site_name: DevSecOps Platform for Data & AI Organization
+site_name: DevSecOps Platform for data pipelines and ML workflows
 site_description: Comprehensive DevSecOps platform for data engineering and AI/ML workloads
-site_author: Data & AI Platform Team
-site_url: https://your-org.github.io/mcp-cdk-ddk
+site_author: DevSecOps Team
+site_url: https://Exemplify777.github.io/aws-cdk-devsecops-platform
 
-repo_name: your-org/mcp-cdk-ddk
-repo_url: https://github.com/your-org/mcp-cdk-ddk
+repo_name: Exemplify777/aws-cdk-devsecops-platform
+repo_url: https://github.com/Exemplify777/aws-cdk-devsecops-platform
 edit_uri: edit/main/docs/
 
 theme:
@@ -123,9 +123,9 @@ nav:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/your-org/mcp-cdk-ddk
+      link: https://github.com/Exemplify777/aws-cdk-devsecops-platform
     - icon: fontawesome/brands/slack
-      link: https://your-org.slack.com/channels/devsecops-platform
+      link: https://Exemplify777.slack.com/channels/devsecops-platform
   version:
     provider: mike
 

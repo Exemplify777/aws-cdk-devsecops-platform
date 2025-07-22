@@ -44,7 +44,7 @@ export LOG_RETENTION_DAYS=30
 
 ```bash
 # GitHub Integration
-export GITHUB_ORG=your-organization
+export GITHUB_ORG=Exemplify777
 export GITHUB_TOKEN=ghp_your_token_here
 
 # Notification Configuration
@@ -170,7 +170,7 @@ github:
 
 templates:
   default_template: data-pipeline
-  template_repository: https://github.com/my-org/ddk-templates
+  template_repository: https://github.com/Exemplify777/aws-cdk-devsecops-platform
 
 security:
   enable_scanning: true

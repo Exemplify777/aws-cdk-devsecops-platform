@@ -299,4 +299,4 @@ We welcome feature requests! Please:
 
 ---
 
-**Note**: This changelog follows [Keep a Changelog](https://keepachangelog.com/) format. For the complete history, see the [GitHub releases](https://github.com/your-org/mcp-cdk-ddk/releases).
+**Note**: This changelog follows [Keep a Changelog](https://keepachangelog.com/) format. For the complete history, see the [GitHub releases](https://github.com/Exemplify777/aws-cdk-devsecops-platform/releases).
